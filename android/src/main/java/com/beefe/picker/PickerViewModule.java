@@ -22,6 +22,7 @@ import com.beefe.picker.view.PickerViewAlone;
 import com.beefe.picker.view.PickerViewLinkage;
 import com.beefe.picker.view.ReturnData;
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -386,6 +387,7 @@ public class PickerViewModule extends ReactContextBaseJavaModule implements Life
                 pickerLayout.setBackgroundColor(argb(colors[3], colors[0], colors[1], colors[2]));
             }
 
+
             int height = barViewHeight + pickerViewHeight;
             if (dialog == null) {
                 dialog = new Dialog(activity, R.style.Dialog_Full_Screen);
@@ -429,6 +431,16 @@ public class PickerViewModule extends ReactContextBaseJavaModule implements Life
         select(selectedValue);
     }
 
+    @ReactMethod
+    public void getHeight(Promise promise) {
+        if (dialog == null|| !dialog.isShowing()) {
+            promise.resolve(0);
+            return;
+        }
+        float density = getReactApplicationContext().getResources().getDisplayMetrics().density;
+        promise.resolve(dialog.getWindow().getAttributes().height / density);
+    }
+    
     @ReactMethod
     public void show() {
         if (dialog == null) {
